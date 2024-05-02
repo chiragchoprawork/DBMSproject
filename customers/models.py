@@ -36,7 +36,7 @@ class AcdCustomer(models.Model):
     c_state = models.CharField(max_length=2, db_comment='Customer State Code - Ex: New York: NY')
     c_zipcode = models.CharField(max_length=5, db_comment='Customer Zipcode')
     a_uid = models.ForeignKey('AcdSafeAcnt', models.DO_NOTHING, db_column='a_uid')
-    acct_type = models.ForeignKey('AcdSafeAcnt', models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdcustomer_acct_type_set')
+    acct_type = models.ForeignKey('AcdSafeAcnt', models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdcustomer_acct_type_set',unique=True)
 
     class Meta:
         managed = False
@@ -46,7 +46,7 @@ class AcdCustomer(models.Model):
 
 class AcdHome(models.Model):
     a_uid = models.OneToOneField('AcdLoan', models.DO_NOTHING, db_column='a_uid', primary_key=True, db_comment='SAFE Unique Account ID')  # The composite primary key (a_uid, acct_type) found, that is not supported. The first column is selected.
-    acct_type = models.ForeignKey('AcdLoan', models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdhome_acct_type_set', db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)')
+    acct_type = models.ForeignKey('AcdLoan', models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdhome_acct_type_set', db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)',unique=True)
     hl_uid = models.IntegerField(unique=True, db_comment='Home Loan Unique Loan ID')
     date_open = models.DateTimeField(db_comment='Home Loan Account Opening Date')
     built_year = models.SmallIntegerField(db_comment='Home Built Year')
@@ -83,7 +83,7 @@ class AcdInsurance(models.Model):
 
 class AcdLoan(models.Model):
     a_uid = models.OneToOneField('AcdSafeAcnt', models.DO_NOTHING, db_column='a_uid', primary_key=True, db_comment='SAFE Unique Account ID')  # The composite primary key (a_uid, acct_type) found, that is not supported. The first column is selected.
-    acct_type = models.ForeignKey('AcdSafeAcnt', models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdloan_acct_type_set', db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)')
+    acct_type = models.ForeignKey('AcdSafeAcnt', models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdloan_acct_type_set', db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)',unique=True)
     acct_no = models.BigIntegerField(db_comment='Loan Account Unique Account Number')
     loan_type = models.CharField(max_length=2, db_comment='Loan Type - Student (SL)/ Home (HL)/ Personal (PL)')
     loan_amt = models.DecimalField(max_digits=10, decimal_places=2, db_comment='OVERALL LOAN AMOUNT ')
@@ -99,7 +99,7 @@ class AcdLoan(models.Model):
 
 class AcdPersonal(models.Model):
     a_uid = models.OneToOneField(AcdLoan, models.DO_NOTHING, db_column='a_uid', primary_key=True, db_comment='SAFE Unique Account ID')  # The composite primary key (a_uid, acct_type) found, that is not supported. The first column is selected.
-    acct_type = models.ForeignKey(AcdLoan, models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdpersonal_acct_type_set', db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)')
+    acct_type = models.ForeignKey(AcdLoan, models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdpersonal_acct_type_set', db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)',unique=True)
     pl_uid = models.IntegerField(unique=True, db_comment='Personal Loan Unique ID')
     date_open = models.DateTimeField(db_comment='Personal Loan Account Opening Date')
 
@@ -111,7 +111,7 @@ class AcdPersonal(models.Model):
 
 class AcdSafeAcnt(models.Model):
     a_uid = models.BigIntegerField(primary_key=True, db_comment='SAFE Unique Account ID')  # The composite primary key (a_uid, acct_type) found, that is not supported. The first column is selected.
-    acct_type = models.CharField(max_length=2, db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)')
+    acct_type = models.CharField(max_length=2, db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)',unique=True)
     acct_name = models.CharField(max_length=30, db_comment='Account Name')
     a_street = models.CharField(max_length=30, db_comment='Account Street Address')
     a_city = models.CharField(max_length=30, db_comment='Account City Location')
@@ -126,7 +126,7 @@ class AcdSafeAcnt(models.Model):
 
 class AcdSavings(models.Model):
     a_uid = models.OneToOneField(AcdSafeAcnt, models.DO_NOTHING, db_column='a_uid', primary_key=True, db_comment='SAFE Unique Account ID')  # The composite primary key (a_uid, acct_type) found, that is not supported. The first column is selected.
-    acct_type = models.ForeignKey(AcdSafeAcnt, models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdsavings_acct_type_set', db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)')
+    acct_type = models.ForeignKey(AcdSafeAcnt, models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdsavings_acct_type_set', db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)',unique=True)
     acct_no = models.BigIntegerField(unique=True, db_comment='Savings Account Unique Account Number')
     date_open = models.DateTimeField(db_comment='Savings Account Opening Date')
     intrst_rate = models.DecimalField(max_digits=4, decimal_places=2, db_comment='Interest Rate')
@@ -139,7 +139,7 @@ class AcdSavings(models.Model):
 
 class AcdStudent(models.Model):
     a_uid = models.OneToOneField(AcdLoan, models.DO_NOTHING, db_column='a_uid', primary_key=True, db_comment='SAFE Unique Account ID')  # The composite primary key (a_uid, acct_type) found, that is not supported. The first column is selected.
-    acct_type = models.ForeignKey(AcdLoan, models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdstudent_acct_type_set', db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)')
+    acct_type = models.ForeignKey(AcdLoan, models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdstudent_acct_type_set', db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)',unique=True)
     sl_uid = models.FloatField(unique=True, db_comment='Student Loan Unique Loan ID')
     date_open = models.DateTimeField(db_comment='Student Loan Account Opening Date')
     student_id = models.CharField(max_length=6, db_comment='Student ID From Institute')
