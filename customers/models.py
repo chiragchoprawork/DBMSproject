@@ -28,20 +28,20 @@ class AcdChecking(models.Model):
 
 
 class AcdCustomer(models.Model):
-    c_id = models.IntegerField(primary_key=True, db_comment='Unique Customer ID')
-    c_fname = models.CharField(max_length=30, db_comment='Customer First Name')
-    c_lname = models.CharField(max_length=30, db_comment='Customer Last Name')
-    c_street = models.CharField(max_length=30, db_comment='Customer Street - Address Line 1')
-    c_city = models.CharField(max_length=30, db_comment='Customer City Location')
-    c_state = models.CharField(max_length=2, db_comment='Customer State Code - Ex: New York: NY')
-    c_zipcode = models.CharField(max_length=5, db_comment='Customer Zipcode')
-    a_uid = models.ForeignKey('AcdSafeAcnt', models.DO_NOTHING, db_column='a_uid')
-    acct_type = models.ForeignKey('AcdSafeAcnt', models.DO_NOTHING, db_column='acct_type', to_field='acct_type', related_name='acdcustomer_acct_type_set',unique=True)
+    c_id = models.IntegerField(primary_key=True)
+    c_fname = models.CharField(max_length=30)
+    c_lname = models.CharField(max_length=30)
+    c_street = models.CharField(max_length=30)
+    c_city = models.CharField(max_length=30)
+    c_state = models.CharField(max_length=2)
+    c_zipcode = models.CharField(max_length=5)
+    a_uid = models.ForeignKey('AcdSafeAcnt',on_delete =models.DO_NOTHING,db_column='a_uid', to_field='a_uid')
+    # acct_type = models.ForeignKey('AcdSafeAcnt', on_delete =models.CASCADE, db_column='acct_type', to_field='acct_type', related_name='acdcustomer_acct_type_set')
 
     class Meta:
         managed = False
         db_table = 'acd_customer'
-        unique_together = (('a_uid', 'acct_type'),)
+        # unique_together = (('a_uid', 'acct_type'),)
 
 
 class AcdHome(models.Model):
@@ -110,7 +110,7 @@ class AcdPersonal(models.Model):
 
 
 class AcdSafeAcnt(models.Model):
-    a_uid = models.BigIntegerField(primary_key=True, db_comment='SAFE Unique Account ID')  # The composite primary key (a_uid, acct_type) found, that is not supported. The first column is selected.
+    a_uid = models.BigIntegerField(primary_key=True, db_comment='SAFE Unique Account ID')
     acct_type = models.CharField(max_length=2, db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)',unique=True)
     acct_name = models.CharField(max_length=30, db_comment='Account Name')
     a_street = models.CharField(max_length=30, db_comment='Account Street Address')
@@ -122,6 +122,7 @@ class AcdSafeAcnt(models.Model):
         managed = False
         db_table = 'acd_safe_acnt'
         unique_together = (('a_uid', 'acct_type'),)
+
 
 
 class AcdSavings(models.Model):
