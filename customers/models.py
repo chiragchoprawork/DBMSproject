@@ -42,6 +42,21 @@ class AcdCustomer(models.Model):
         managed = False
         db_table = 'acd_customer'
         # unique_together = (('a_uid', 'acct_type'),)
+        
+class AcdSafeAcnt(models.Model):
+    a_uid = models.BigIntegerField(primary_key=True, db_comment='SAFE Unique Account ID')
+    acct_type = models.CharField(max_length=2, db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)',unique=True)
+    acct_name = models.CharField(max_length=30, db_comment='Account Name')
+    a_street = models.CharField(max_length=30, db_comment='Account Street Address')
+    a_city = models.CharField(max_length=30, db_comment='Account City Location')
+    a_state = models.CharField(max_length=2, db_comment='Account State Code - Ex: New York: NY')
+    a_zipcode = models.CharField(max_length=5, db_comment='Account Zipcode')
+
+    class Meta:
+        managed = False
+        db_table = 'acd_safe_acnt'
+        unique_together = (('a_uid', 'acct_type'),)
+
 
 
 class AcdHome(models.Model):
@@ -109,19 +124,6 @@ class AcdPersonal(models.Model):
         unique_together = (('a_uid', 'acct_type'),)
 
 
-class AcdSafeAcnt(models.Model):
-    a_uid = models.BigIntegerField(primary_key=True, db_comment='SAFE Unique Account ID')
-    acct_type = models.CharField(max_length=2, db_comment='Account Type - Checking (C)/ Savings (S)/ Loan (L)',unique=True)
-    acct_name = models.CharField(max_length=30, db_comment='Account Name')
-    a_street = models.CharField(max_length=30, db_comment='Account Street Address')
-    a_city = models.CharField(max_length=30, db_comment='Account City Location')
-    a_state = models.CharField(max_length=2, db_comment='Account State Code - Ex: New York: NY')
-    a_zipcode = models.CharField(max_length=5, db_comment='Account Zipcode')
-
-    class Meta:
-        managed = False
-        db_table = 'acd_safe_acnt'
-        unique_together = (('a_uid', 'acct_type'),)
 
 
 
